@@ -1,0 +1,25 @@
+{
+  "name": "event-nfc-cli",
+  "version": "1.0.0",
+  "description": "CLI for assigning and checking in NFC event bracelets",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "assign": "npm run build && node dist/main.js assign",
+    "checkin": "npm run build && node dist/main.js checkin",
+    "seed": "npm run build && node dist/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "firebase-admin": "^13.7.0",
+    "nfc-pcsc": "^0.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2"
+  }
+}
