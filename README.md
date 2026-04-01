@@ -54,32 +54,13 @@ During check-in:
 
 ## Before You Start
 
-You need 4 things:
+You need 3 things:
 
 1. A Windows PC
 2. An `ACR122U` USB NFC reader
 3. NFC bracelets compatible with your event setup
-4. A Firebase service account JSON file with access to Firestore
 
-This project expects the Firebase JSON file to be placed in the project folder with this exact name:
-
-```text
-nfcc-8a2e5-firebase-adminsdk-fbsvc-ce0d91f4e3.json
-```
-
-If the file has a different name, the CLI can still work, but you must pass `--service-account` every time.
-
-## Important Security Warning
-
-Your Firebase service account JSON is a secret.
-
-Do not:
-- upload it to GitHub
-- send it in chat apps
-- email it around casually
-- commit it into git history
-
-This repository ignores that file locally, but you still need to keep it private.
+The Firebase service account JSON is already included in this repository. The CLI detects it automatically.
 
 ## Step 1: Install Node.js on Windows
 
@@ -110,7 +91,29 @@ You should see version numbers printed for both commands.
 
 If one of these commands says it is not recognized, close PowerShell, open it again, and retry.
 
-## Step 2: Install Git on Windows (Optional)
+## Step 2: Install Windows Build Tools
+
+The NFC library includes native C++ code that must compile during `npm install`. On Windows, this requires Python and a C++ compiler.
+
+The easiest way to get both:
+
+1. Open `PowerShell` **as Administrator** (right-click > Run as Administrator).
+2. Run:
+
+```powershell
+npm install -g windows-build-tools
+```
+
+This installs Python and the Visual Studio Build Tools C++ workload automatically. It can take several minutes.
+
+If that command fails or you prefer manual installation:
+
+1. Install Python 3 from <https://www.python.org/downloads/>. During installation, check `Add python.exe to PATH`.
+2. Install Visual Studio Build Tools from <https://visualstudio.microsoft.com/visual-cpp-build-tools/>. During installation, select the `Desktop development with C++` workload.
+
+After installation, close and reopen PowerShell before continuing.
+
+## Step 3: Install Git on Windows (Optional)
 
 Git is only needed if you want to clone the repository or pull updates later.
 
@@ -133,7 +136,7 @@ To verify Git:
 git --version
 ```
 
-## Step 3: Download This Project
+## Step 4: Download This Project
 
 There are 2 ways to get the project onto the computer.
 
@@ -160,36 +163,8 @@ C:\Users\YourName\Desktop\event-nfc-cli
 If Git is installed:
 
 ```powershell
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-cd YOUR-REPO
-```
-
-Replace the GitHub URL with the real one.
-
-## Step 4: Put the Firebase JSON File in the Project Folder
-
-The project folder should contain files like:
-
-```text
-package.json
-src\
-README.md
-```
-
-Copy your Firebase service account JSON file into that same folder.
-
-Recommended filename:
-
-```text
-nfcc-8a2e5-firebase-adminsdk-fbsvc-ce0d91f4e3.json
-```
-
-If you use that exact filename, the CLI will detect it automatically.
-
-If you use a different filename, you must pass it explicitly, for example:
-
-```powershell
-npm run seed -- --service-account "C:\Users\YourName\Desktop\my-firebase-key.json"
+git clone https://github.com/HabibPro1999/event-nfc-cli.git
+cd event-nfc-cli
 ```
 
 ## Step 5: Open PowerShell in the Project Folder
@@ -211,7 +186,7 @@ dir
 
 You should see files such as `package.json` and `README.md`.
 
-## Step 6: Install Project Dependencies
+## Step 6: Install Dependencies
 
 Run:
 
@@ -223,7 +198,7 @@ This installs the packages required by the project.
 
 When it finishes, you should see a new `node_modules` folder.
 
-## Step 7: Plug In the NFC Reader
+## Step 7: Plug in the NFC Reader
 
 Plug the `ACR122U` into a USB port.
 
@@ -238,7 +213,7 @@ Notes:
 
 You do not need to manually choose a COM port or USB device in this CLI.
 
-## Step 8: Create Test Data First
+## Step 8: Create Test Data
 
 Do not test against your real event collection first.
 
@@ -276,13 +251,11 @@ Useful examples:
 ```powershell
 npm run seed -- --count 25
 npm run seed -- --collection registrations_test --count 10
-npm run seed -- --service-account "C:\path\to\file.json" --collection registrations_test --count 10
 ```
 
 Options:
 - `--collection NAME`: Firestore collection name. Default: `registrations`
 - `--count NUMBER`: number of fake attendees to create. Default: `10`
-- `--service-account PATH`: path to your Firebase JSON file
 
 ## Step 9: Assign Bracelets
 
@@ -298,12 +271,6 @@ Example:
 
 ```powershell
 npm run assign -- --collection registrations_test --url https://your-event-page.example
-```
-
-If your service account file is not using the default filename, use:
-
-```powershell
-npm run assign -- --service-account "C:\path\to\file.json" --collection registrations_test --url https://your-event-page.example
 ```
 
 What you will see:
@@ -356,12 +323,6 @@ Run:
 npm run checkin -- --collection registrations_test
 ```
 
-If your service account file is not using the default filename, use:
-
-```powershell
-npm run checkin -- --service-account "C:\path\to\file.json" --collection registrations_test
-```
-
 What happens:
 
 1. The CLI loads all assigned bracelets into memory.
@@ -391,8 +352,8 @@ Check-in is live.
 Do this in order:
 
 1. Install Node.js
-2. Download the project
-3. Put the Firebase JSON file in the project folder
+2. Install Windows Build Tools
+3. Clone or download the project
 4. Run `npm install`
 5. Plug in the reader
 6. Run `npm run seed -- --collection registrations_test --count 5`
@@ -485,18 +446,6 @@ registrations_test
 
 The CLI accepts `--collection` so you can keep test and production data separate.
 
-## If You Want to Use a Different Firebase JSON Filename
-
-That is allowed.
-
-Example:
-
-```powershell
-npm run seed -- --service-account "C:\Users\YourName\Desktop\firebase-key.json" --collection registrations_test --count 10
-npm run assign -- --service-account "C:\Users\YourName\Desktop\firebase-key.json" --collection registrations_test --url https://your-event-page.example
-npm run checkin -- --service-account "C:\Users\YourName\Desktop\firebase-key.json" --collection registrations_test
-```
-
 ## Stopping the Program
 
 When the CLI is running, press:
@@ -529,19 +478,11 @@ Fix:
 
 ### `Service account file not found`
 
-The Firebase JSON file is missing or the path is wrong.
+The Firebase JSON file included in the repo may have been moved or deleted.
 
 Fix:
-- make sure the file exists in the project root
-- or pass `--service-account` with the full path
-
-### `Set --service-account or GOOGLE_APPLICATION_CREDENTIALS before starting the CLI.`
-
-The CLI could not find your Firebase JSON file.
-
-Fix:
-- place the file in the project folder with the default filename
-- or pass `--service-account`
+- make sure `nfcc-8a2e5-firebase-adminsdk-fbsvc-ce0d91f4e3.json` exists in the project root
+- re-clone the repository if needed
 
 ### The reader is plugged in but nothing happens
 
@@ -596,16 +537,15 @@ src\ndef-util.ts  NDEF URL payload creation
 
 ## Summary
 
-If you want the shortest setup path on Windows:
+Shortest setup path on Windows:
 
 1. Install Node.js
-2. Download this repo as ZIP
-3. Extract it
-4. Put the Firebase JSON file in the project folder
-5. Open PowerShell in that folder
-6. Run `npm install`
-7. Run `npm run seed -- --collection registrations_test --count 10`
-8. Run `npm run assign -- --collection registrations_test --url https://your-event-page.example`
-9. Run `npm run checkin -- --collection registrations_test`
+2. Install Windows Build Tools (`npm install -g windows-build-tools` in admin PowerShell)
+3. Clone or download this repo
+4. Open PowerShell in the project folder
+5. Run `npm install`
+6. Run `npm run seed -- --collection registrations_test --count 10`
+7. Run `npm run assign -- --collection registrations_test --url https://your-event-page.example`
+8. Run `npm run checkin -- --collection registrations_test`
 
-That is enough to test the full flow.
+The Firebase credentials are included in the repository. No extra configuration needed.
