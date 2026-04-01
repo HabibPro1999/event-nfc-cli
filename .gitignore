@@ -1,5 +1,4 @@
 node_modules/
 dist/
 service-account.json
-nfcc-8a2e5-firebase-adminsdk-fbsvc-ce0d91f4e3.json
 .env
